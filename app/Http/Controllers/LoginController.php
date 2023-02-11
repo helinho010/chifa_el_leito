@@ -15,6 +15,7 @@ class LoginController extends Controller
             'password'=> 'required'
         ]);
         
+        /* Buenos dias, como estas */
         return view('welcome');
     }
 }
