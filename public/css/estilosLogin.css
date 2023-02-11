@@ -1,0 +1,35 @@
+.barraSuperior
+{
+    background-image: url(https://bootdey.com/img/Content/bg1.jpg);
+    font-size: 3em;
+    color: aliceblue;
+    font-family: 'Kalam','Courier New', 'cursive';
+    display: block;
+    position: absolute;
+    left: 0;
+    top:0;
+}
+.barraSuperior > div > div > p
+{
+    font-size: 0.5em;
+    color: aliceblue;
+}
+
+#main-wrapper
+{
+    margin-top: 15%;
+    background-color: #ecf0f1;
+    width: 70%;
+}
+
+input:hover
+{
+    border: 2px solid #2c3e50;
+}
+
+body
+{
+    background-image: url('../img/fondos/bg1.jpg');
+    background-repeat: no-repeat;
+    color: black;
+}
