@@ -18,4 +18,4 @@ Route::get('/login', function () {
     return view('login');
 });
 
-Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin']);
+Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin'])->name('auth.login');
