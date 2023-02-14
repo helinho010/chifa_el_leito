@@ -17,5 +17,9 @@ use App\Http\Controllers\LoginController;
 Route::get('/login', function () {
     return view('login');
 });
-
 Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin'])->name('auth.login');
+
+Route::get('/crearFuncionario', function () {
+    return view('formFuncionario');
+});
+Route::post('/registroFuncionario',[LoginController::class, 'crearFuncionario'])->name('crear.funcionario');

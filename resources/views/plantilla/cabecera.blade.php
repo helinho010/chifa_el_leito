@@ -16,17 +16,3 @@
 </head>
 <body>
 
-@section('barraSuperior')
-<div class="container-fluid barraSuperior">
-    <div class="row ">
-        <div class="col-12">
-            <b> CHIFA "EL LEITO"</b>
-            <p></p>
-        </div>
-    </div>
-</div>
-
-
-<script src="js/bootstrap.js"></script>    
-</body>
-</html>
