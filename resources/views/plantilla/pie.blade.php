@@ -1,4 +1,4 @@
 
-<script src="js/bootstrap.js"></script>    
+<script src="{{asset('js/bootstrap.js')}}"></script>    
 </body>
 </html>

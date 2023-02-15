@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/estilosLogin.css">
+    <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{asset('css/estilosLogin.css')}}">
     <link rel="shortcut icon" href="img/@yield('nombreIcono')" type="image/x-icon">
     <!-- Fonts Google-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,4 +15,6 @@
     <title>@yield('nombreDocumento')</title>
 </head>
 <body>
+
+
 

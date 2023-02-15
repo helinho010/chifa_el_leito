@@ -1,4 +1,4 @@
-@extends('plantilla.cabecera')
+@include('plantilla.cabecera')
 @section('nombreIcono','login.png')
 @section('nombreDocumento',"Inicio Session")
 @section('barraSuperior')
@@ -118,4 +118,4 @@
   Yo &hearts; la Chifa El Leito !
 </div>
 
-@extends('plantilla.pie')
+@include('plantilla.pie')

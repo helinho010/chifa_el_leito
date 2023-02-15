@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Credenciales;
 use App\Models\Funcionario;
 use App\Models\Persona;
+use Faker\Provider\ar_EG\Person;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -17,14 +18,17 @@ class LoginController extends Controller
             'usuario'=> 'required',
             'password'=> 'required',
         ]);
+        $identificadorPersonaBD= Persona::where("ci",$request["usuario"])->value("id_persona");
+        $identificadorFuncionarioDB= Funcionario::where("id_pers",$identificadorPersonaBD)->value("id_funcionario");
+        $contraseniaFuncionarioDBCredenciales= Credenciales::where("id_func",$identificadorFuncionarioDB)->value("contrasenia");
         
-        $usuarioprue=new Funcionario();
-        $usuarioprue->codigo_funcionario="pop926";
-        $usuarioprue->cargo="Cajero";
-        $usuarioprue->email="masticar@gmail.com";
-        $usuarioprue->id_pers=1;
-        $usuarioprue->save();
-        return ($usuarioprue);
+        if ($request["usuario"] == Credenciales::where("id_func",$identificadorFuncionarioDB)->value("usuario") and password_verify($request["password"],$contraseniaFuncionarioDBCredenciales))
+        {
+            return redirect('/');    
+        }
+        else{
+            return redirect('/login');
+        }
     }
     /*
      *Funcion que determina el codigod de funcionario con las primeras siglas del nombre, apellido paterno, materno y Documento de identidad "CI"
@@ -91,7 +95,11 @@ class LoginController extends Controller
     
             $credenciales=new Credenciales();
             $credenciales->usuario=$persona->ci;
-            $credenciales->contrasenia=$persona->ci;
+            /*
+            * Cifrado de password
+            */
+            $hash_contrasenia=password_hash($persona->ci,PASSWORD_DEFAULT);
+            $credenciales->contrasenia=$hash_contrasenia;
             $id_funcionario_tabla_funcionario=Funcionario::where("id_pers",$id_persona_tabla_persona)->value('id_funcionario');
             $credenciales->id_func=$id_funcionario_tabla_funcionario;
             $credenciales->save();
@@ -101,6 +109,23 @@ class LoginController extends Controller
             $mensaje="error";
         }
         
-        return view('infoFuncionario',["mensaje"=>$mensaje, "nombreCompleto"=>trim($request["nombres"])." ".trim($request["appat"])." ".trim($request["apmat"])]);
+        return redirect()->route('mostrar.funcionario', ['id' => $id_persona_tabla_persona,'mensaje'=>'ok']);
+    }
+
+    public function mostrarFuncionario($id,$mensaje)
+    {
+        $persona=Persona::find($id);
+        $funcionario=Funcionario::where("id_pers",$id)->first();       
+        return view('infoFuncionario',[
+            "mensaje"=>$mensaje, 
+            "nombreCompleto"=>$persona->nombre." ".$persona->ap_pat." ".$persona->ap_mat,
+            "ci"=>$persona->ci,
+            "cod_funcionario"=>$funcionario->codigo_funcionario,
+            "fec_nac"=>$persona->fec_nac,
+            "tel_cel"=>$persona->tel_cel,
+            "cargo"=>$funcionario->cargo,
+            "email"=>$funcionario->email,
+            "domicilio"=>$persona->domicilio
+        ]);   
     }
 }

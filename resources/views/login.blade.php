@@ -1,4 +1,4 @@
-@extends('plantilla.cabecera')
+@include('plantilla.cabecera')
 @section('nombreIcono','login.png')
 @section('nombreDocumento',"Inicio Session")
 @section('barraSuperior')
@@ -20,7 +20,7 @@
           <form control="" class="form-group" action="{{ route('auth.login') }}" method="POST">
             @csrf
             <div class="row">
-              <input type="text" value="{{ old('usuario')}}" name="usuario" id="username" class="form__input" placeholder="Nombre de Usuario">
+              <input type="password" value="{{ old('usuario')}}" name="usuario" id="username" class="form__input" placeholder="Nombre de Usuario">
               @error('usuario')
                   <div style="color: red; font-size: 13px; margin-top:5px; margin-left:10px">
                     {{$message}}
@@ -57,6 +57,4 @@
   Yo &hearts; la Chifa El Leito !
 </div>
 
-
-
-@extends('plantilla.pie');
+@include('plantilla.pie')
