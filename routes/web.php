@@ -21,5 +21,5 @@ Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin']
 
 Route::get('/crearFuncionario', function () {
     return view('formFuncionario');
-});
+})->name('get.crear.funcionario') ;
 Route::post('/registroFuncionario',[LoginController::class, 'crearFuncionario'])->name('crear.funcionario');

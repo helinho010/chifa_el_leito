@@ -47,7 +47,7 @@
                 @enderror
             </div>
             
-            <div class="row bloque">
+            <div class="row bloque">(*)
                 <input type="text" value="{{ old('ci')}}" name="ci" id="ci" class="form__input" placeholder="Doc. Identidad">
                 @error('ci')
                     <div style="color: red; font-size: 13px; margin-top:5px; margin-left:10px">
@@ -118,4 +118,4 @@
   Yo &hearts; la Chifa El Leito !
 </div>
 
-@extends('plantilla.pie');
+@extends('plantilla.pie')
