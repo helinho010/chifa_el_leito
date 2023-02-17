@@ -1,5 +1,5 @@
 @include('plantilla.cabecera')
-<div class="container-fluid detalleDeVentaFuncionario">
+<div class="container detalleDeVentaFuncionario">
     <div class="row">
         <div class="col-md-12 nombreEntidad text-center">
             CHIFA EL LEITO 
@@ -45,7 +45,7 @@
         </div>
         <div class="col-md-3">
             <div class="imagenPlato">
-                <img src="" alt="">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minus sequi similique soluta deserunt autem dolor ad fuga non corporis. Nihil perferendis ex nemo eligendi exercitationem voluptate sequi omnis iste modi!
+                <img class="img-fluid" src="{{asset("img/platos/pollo.jpeg")}}" alt="">
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
                   </tr>
                 </thead>
                 <tbody class="text-center">
-                  <tr>
+                  <tr id="reg-ventas">
                     <th scope="row" class="text-uppercase">cod1</th>
                     <td class="text-uppercase">Arroz con chicharon de pollo</td>
                     <td id="cantidad-ventas-form">1</td>
