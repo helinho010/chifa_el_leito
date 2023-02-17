@@ -117,5 +117,4 @@
 <div class="container-fluid text-center footer">
   Yo &hearts; la Chifa El Leito !
 </div>
-
 @include('plantilla.pie')

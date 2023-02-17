@@ -162,3 +162,56 @@ form{
     margin-bottom:1em;
 	transition: all .5s ease;
 }
+
+
+/*
+* Estilos de la vista de venta de productos 
+*/
+
+.detalleDeVentaFuncionario > .row 
+{
+	margin-top: 15px;
+	margin-bottom: 30px;
+	border-bottom: 2px solid black;
+}
+.detalleDeVentaFuncionario > .row > .nombreEntidad
+{
+	font-size: 38px;
+	font-family: Kalam,Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #c0392b;
+}
+
+.detalleDeVentaFuncionario > .row > div > div > .fecha > div
+{
+	text-decoration-line:unset;
+}
+
+.detalleDeVentaFuncionario > .row > div > div > div
+{
+	margin-bottom: 8px;
+} 
+
+/*
+* Estilos para el formulario de detalle de ventas
+*/
+.detalleDeVentaFuncionario > .row > div > form > .row > div
+{
+	display: inline-block;
+	margin: 5px;
+}
+.detalleDeVentaFuncionario > .row > div > form > .row > div > input
+{
+	border-bottom: 5px solid black;
+	height: 100px;
+}
+.detalleDeVentaFuncionario > .row > div > form > .row > .btn-ventas
+{
+	height: 50px; 
+	color:aliceblue;
+}
+.detalleDeVentaFuncionario > .row > div > form > .row > .btn-ventas:hover
+{
+	color:black;
+	height: 55px; 
+}

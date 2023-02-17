@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('bienvenido');
 
+Route::get('/ventaProductos', function () {
+    return view('ventaProductos');
+})->name('venta.Productos');
+
 Route::get('/login', function () {
     return view('login');
 });
