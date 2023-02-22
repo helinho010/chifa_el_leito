@@ -1,3 +1,12 @@
+function calcularMontoTotalCompra(montosPlatos)
+{
+    let suma=0;
+    for (let index = 0; index < montosPlatos.length; index++) 
+    {
+        suma = suma+montosPlatos[index];
+    }
+    return suma;
+}
 
 
 /*
@@ -33,4 +42,5 @@ $("#btn-ventas-borrar").on("click",function (e) {
            $(this).remove();
         }
     });
+    console.log(calcularMontoTotalCompra([10,20,30]));
 });
