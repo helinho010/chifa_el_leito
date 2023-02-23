@@ -16,39 +16,62 @@ function calcularMontoTotalCompra(montosPlatos)
 $("#btn-ventas-aceptar").on("click", function (e) { 
     e.preventDefault();
     const subtotal=[];
-    let formCodPlato = $("#codplato").val();
+    let codigoDeProductoBuscar=($("#codplato").val()).toUpperCase();
     let formCantPlato= parseInt($("#cantplato").val());
-    
-    if(formCantPlato>0)
-    {
-        var trstring='<tr id="reg-ventas"><th scope="row" class="text-uppercase">'+formCodPlato+'</th><td class="text-uppercase">Arroz con chicharon de pollo</td><td id="cantidad-ventas-form">'+formCantPlato+'</td><td id="punitario-ventas-form">20</td><td id="subtotal-ventas-form"></td></tr>'
-        $("#filasDetalleVentas").before(trstring);
-
-        $("tr").each(function(){
-            if($(this).attr("id") == "reg-ventas")
+    let csrf=$("input[name=_token]").val();
+    $.ajax({
+        type: "POST",
+        url: '/buscarProductos',
+        data: {"_token":csrf,
+            "codigoProducto":codigoDeProductoBuscar},
+        
+        success: function (response) {
+            let respuestaConvertida = $.parseJSON(response);
+            if(respuestaConvertida.descripcion === null && respuestaConvertida.precio === null )
             {
-                if (!($(this).find('#cantidad-ventas-form').text()))
-                {}
-                else{  
-                cantidad=parseInt($(this).find('#cantidad-ventas-form').text());
-                precioPlato=parseInt($(this).find('#punitario-ventas-form').text());
-                $(this).find("#subtotal-ventas-form").text(cantidad*precioPlato);
-                subtotal.push(cantidad*precioPlato);
-                }
+                $("#modalMensajesLabel").text("El CODIGO DE PLATO introducido es invalido");
+                $(".modal-body").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
+                $("#modalMensajes").modal("show");
             }
-        });
+            else{
+                if(formCantPlato>0)
+                    {
+                        
+                        var trstring='<tr id="reg-ventas"><th scope="row" class="text-uppercase">'+codigoDeProductoBuscar+'</th><td class="text-uppercase">'+respuestaConvertida.descripcion+'</td><td id="cantidad-ventas-form">'+formCantPlato+'</td><td id="punitario-ventas-form">'+(respuestaConvertida.precio).substring(1)+'</td><td id="subtotal-ventas-form"></td></tr>'
+                        $("#filasDetalleVentas").before(trstring);
 
-        let totalCobrar=calcularMontoTotalCompra(subtotal);
-        $("#cobrar-ventas-form").text(totalCobrar);
-        let efectivoRecido=$("#efectivo-ventas-form").val();
-        $("#cambio-ventas-form").text(efectivoRecido-totalCobrar);
-    }
-    else
-    {
-        $("#modalMensajesLabel").text("ERROR EN LA ** CANTIDAD **");
-        $(".modal-body").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
-        $("#modalMensajes").modal("show");
-    }
+                        $("tr").each(function(){
+                            if($(this).attr("id") == "reg-ventas")
+                            {
+                                if (!($(this).find('#cantidad-ventas-form').text()))
+                                {}
+                                else{  
+                                cantidad=parseInt($(this).find('#cantidad-ventas-form').text());
+                                precioPlato=parseFloat($(this).find('#punitario-ventas-form').text());
+                                $(this).find("#subtotal-ventas-form").text((cantidad*precioPlato).toFixed(2));
+                                subtotal.push((cantidad*precioPlato).toFixed(2));
+                                }
+                            }
+                        });
+
+                        let totalCobrar=calcularMontoTotalCompra(subtotal);
+                        $("#cobrar-ventas-form").text(totalCobrar.toFixed(2));
+                        let efectivoRecido=$("#efectivo-ventas-form").val();
+                        $("#cambio-ventas-form").text((efectivoRecido-totalCobrar).toFixed(2));
+                    }
+                    else
+                    {
+                        $("#modalMensajesLabel").text("ERROR EN LA ** CANTIDAD **");
+                        $(".modal-body").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
+                        $("#modalMensajes").modal("show");
+                    }
+            }
+        },
+        error: function (error) { 
+            console.log("error"); 
+        }
+    });
+
     
 });
 
@@ -87,15 +110,15 @@ $("#btn-ventas-borrar").on("click",function (e) {
            else{
              cantidad=$(this).find('#cantidad-ventas-form').text();
              precioPlato=$(this).find('#punitario-ventas-form').text();
-             $(this).find("#subtotal-ventas-form").text(cantidad*precioPlato);
+             $(this).find("#subtotal-ventas-form").text((cantidad*precioPlato).toFixed(2));
              subtotal.push(cantidad*precioPlato);
            }
         }
     });
     let totalCobrar=calcularMontoTotalCompra(subtotal);
-    $("#cobrar-ventas-form").text(totalCobrar);
+    $("#cobrar-ventas-form").text(totalCobrar.toFixed(2));
     let efectivoRecido=$("#efectivo-ventas-form").val();
-    $("#cambio-ventas-form").text(efectivoRecido-totalCobrar);
+    $("#cambio-ventas-form").text((efectivoRecido-totalCobrar).toFixed(2));
 });
 
 /*
@@ -106,9 +129,43 @@ $("#efectivo-ventas-form").keypress(function(e) {
       e.preventDefault();
       let aCobrar=$("#cobrar-ventas-form").text();
       let efectivoRecido=$("#efectivo-ventas-form").val();
-      $("#cambio-ventas-form").text(efectivoRecido-aCobrar);
+      $("#cambio-ventas-form").text((efectivoRecido-aCobrar).toFixed(2));
     }
 });
 
 
 
+
+
+
+/*
+* Codigo para consultar los productos
+**
+**Esta funcion aun falta terminar, aun hay que trabajar
+*/
+$("#imprimirDetalleVentaProducto").on("click",function(){
+    let codigoDeProductoBuscar=$("#codplato").val();
+    let csrf=$("input[name=_token]").val();
+    $.ajax({
+        type: "POST",
+        url: '/buscarProductos',
+        data: {"_token":csrf,
+            "codigoProducto":codigoDeProductoBuscar},
+        
+        success: function (response) {
+            let respuestaConvertida = $.parseJSON(response);
+            if(respuestaConvertida.descripcion === null && respuestaConvertida.precio === null )
+            {
+                $("#modalMensajesLabel").text("No se encontro le CODIGO DE PLATO introducido");
+                $(".modal-body").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
+                $("#modalMensajes").modal("show");
+            }
+            else{
+                console.log((respuestaConvertida.precio).substring(1));
+            }
+        },
+        error: function (error) { 
+            console.log("error"); 
+        }
+    });
+});

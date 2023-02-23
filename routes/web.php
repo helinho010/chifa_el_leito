@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ventaProductosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,5 @@ Route::get('/crearFuncionario', function () {
 Route::post('/registroFuncionario',[LoginController::class, 'crearFuncionario'])->name('crear.funcionario');
 
 Route::get('/mostrarFuncionario/{id}/{mensaje}',[LoginController::class, 'mostrarFuncionario'])->name('mostrar.funcionario');
+
+Route::post('/buscarProductos',[ventaProductosController::class, 'buscarProducto'])->name('buscar.producto');

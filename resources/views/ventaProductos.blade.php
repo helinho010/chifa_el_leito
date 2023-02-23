@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="col-md-9">
-            <form action="" method="post">
+            <form method="post">
                 <div class="row">
                     <div class="col-md-3">
                         <input type="text" class="form-control" id="codplato" placeholder="Cod.Pla.">
@@ -59,7 +59,7 @@
                     <th class="col-md-5 bg-info" scope="col">Descripcion</th>
                     <th class="col-md-2 bg-warning" scope="col">Cantidad</th>
                     <th class="col-md-2 bg-danger" scope="col">P. Unitario Bs</th>
-                    <th class="col-md-2 bg-danger" scope="col">Sub Total Bs</th>
+                    <th class="col-md-2 bg-secondary" scope="col">Sub Total Bs</th>
                   </tr>
                 </thead>
                 <tbody class="text-center">
@@ -91,6 +91,10 @@
         </div>
     </div>
 </div>
+<form class="text-center" id="imprimir-detalle-ventas">
+  @csrf
+  <input class="btn" type="button" value="Imprimir" id="imprimirDetalleVentaProducto">
+</form>
 
 <!--Modal de mensajes-->
 <div class="modal fade" id="modalMensajes" tabindex="-1" aria-labelledby="modalMensajesLabel" aria-hidden="true">
