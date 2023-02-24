@@ -76,19 +76,19 @@ class LoginController extends Controller
         if($aux=="")
         {
             $persona =new Persona();
-            $persona->nombre=trim($request["nombres"]);
-            $persona->ap_pat=trim($request["appat"]);
-            $persona->ap_mat=trim($request["apmat"]);
-            $persona->ci=trim($request["ci"]);
+            $persona->nombre=strtoupper(trim($request["nombres"]));
+            $persona->ap_pat=strtoupper(trim($request["appat"]));
+            $persona->ap_mat=strtoupper(trim($request["apmat"]));
+            $persona->ci=strtoupper(trim($request["ci"]));
             $persona->fec_nac=trim($request["fecnac"]);
-            $persona->tel_cel=trim($request["telcel"]);
-            $persona->domicilio=trim($request["domicilio"]);
+            $persona->tel_cel=strtoupper(trim($request["telcel"]));
+            $persona->domicilio=strtoupper(trim($request["domicilio"]));
             $persona->save();
     
             $funcionario=new Funcionario();
             $funcionario->codigo_funcionario=$this->generarCodigoFuncionario($persona->nombre,$persona->ap_pat,$persona->ap_mat,$persona->ci);
-            $funcionario->cargo=trim($request["cargo"]);
-            $funcionario->email=trim($request["email"]);        
+            $funcionario->cargo=strtoupper(trim($request["cargo"]));
+            $funcionario->email=strtoupper(trim($request["email"]));
             $id_persona_tabla_persona=Persona::where("ci",trim($request["ci"]))->value('id_persona');
             $funcionario->id_pers=$id_persona_tabla_persona;  
             $funcionario->save();
@@ -107,9 +107,10 @@ class LoginController extends Controller
         }
         else{
             $mensaje="error";
+            $id_persona_tabla_persona=Persona::where("ci",trim($request["ci"]))->value('id_persona');
         }
         
-        return redirect()->route('mostrar.funcionario', ['id' => $id_persona_tabla_persona,'mensaje'=>'ok']);
+        return redirect()->route('mostrar.funcionario', ['id' => $id_persona_tabla_persona,'mensaje'=>$mensaje]);
     }
 
     public function mostrarFuncionario($id,$mensaje)

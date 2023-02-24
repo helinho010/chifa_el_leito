@@ -32,11 +32,19 @@ Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin']
 
 Route::get('/crearFuncionario', function () {
     return view('formFuncionario');
-
 })->name('get.crear.funcionario') ;
 
 Route::post('/registroFuncionario',[LoginController::class, 'crearFuncionario'])->name('crear.funcionario');
-
 Route::get('/mostrarFuncionario/{id}/{mensaje}',[LoginController::class, 'mostrarFuncionario'])->name('mostrar.funcionario');
 
 Route::post('/buscarProductos',[ventaProductosController::class, 'buscarProducto'])->name('buscar.producto');
+
+
+/*
+* Rutas para insertar y mostrar el producto creado
+*/
+Route::post('/registroProducto',[ventaProductosController::class, 'crearProducto'])->name('crear.producto');
+Route::get('/mostrarProducto/{id}/{mensaje}',[ventaProductosController::class, 'mostrarProducto'])->name('mostrar.producto');
+Route::get('/registroProducto', function () {
+    return view('formAddProducto');
+})->name('form.add.producto');
