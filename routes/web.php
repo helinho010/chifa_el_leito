@@ -20,22 +20,34 @@ Route::get('/', function () {
     return view('welcome');
 })->name('bienvenido');
 
-Route::get('/ventaProductos', function () {
-    return view('ventaProductos');
-})->name('venta.Productos');
+
 
 Route::get('/login', function () {
     return view('login');
-});
-
+})->name('inicio.session');
 Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin'])->name('auth.login');
+Route::post('/cerrarSession',[LoginController::class, 'borrarSessione'])->name('cerrar.session');
+
+
+
+Route::get('/ventaProductos', function () {
+    return view('ventaProductos');
+})->name('venta.Productos');
+Route::post('/imprimirDetalleVentaFuncionario',[ventaProductosController::class, 'imprimirDetalleVenta'])->name('buscar.producto');
+
+
 
 Route::get('/crearFuncionario', function () {
     return view('formFuncionario');
 })->name('get.crear.funcionario') ;
 
+
+
 Route::post('/registroFuncionario',[LoginController::class, 'crearFuncionario'])->name('crear.funcionario');
 Route::get('/mostrarFuncionario/{id}/{mensaje}',[LoginController::class, 'mostrarFuncionario'])->name('mostrar.funcionario');
+
+
+
 
 Route::post('/buscarProductos',[ventaProductosController::class, 'buscarProducto'])->name('buscar.producto');
 

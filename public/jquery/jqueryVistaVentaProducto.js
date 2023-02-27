@@ -29,6 +29,7 @@ $("#btn-ventas-aceptar").on("click", function (e) {
             let respuestaConvertida = $.parseJSON(response);
             if(respuestaConvertida.descripcion === null && respuestaConvertida.precio === null )
             {
+                $("#btn-cerrar-modal").show();
                 $("#modalMensajesLabel").text("El CODIGO DE PLATO introducido es invalido");
                 $(".modal-body").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
                 $("#modalMensajes").modal("show");
@@ -61,6 +62,7 @@ $("#btn-ventas-aceptar").on("click", function (e) {
                     }
                     else
                     {
+                        $("#btn-cerrar-modal").show();
                         $("#modalMensajesLabel").text("ERROR EN LA ** CANTIDAD **");
                         $(".modal-body").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
                         $("#modalMensajes").modal("show");
@@ -139,29 +141,66 @@ $("#efectivo-ventas-form").keypress(function(e) {
 
 
 /*
-* Codigo para consultar los productos
-**
-**Esta funcion aun falta terminar, aun hay que trabajar
+* Funcion para imprimir el detalle de ventas 
 */
 $("#imprimirDetalleVentaProducto").on("click",function(){
-    let codigoDeProductoBuscar=$("#codplato").val();
+    if($("#efectivo-ventas-form").val() > 0 && parseInt($("#cambio-ventas-form").text())>=0)
+    {
+        let codigoDeProductoBuscar=$("#codplato").val();
+        let csrf=$("input[name=_token]").val();
+        $.ajax({
+            type: "POST",
+            url: '/imprimirDetalleVentaFuncionario',
+            data: {"_token":csrf,
+                "codigoProducto":codigoDeProductoBuscar},
+            
+            beforeSend: function(){
+                $("#modalMensajesLabel").text("Procesando...");
+                $(".modal-body").html('Espere un momento por favor, Cargando datos a la base de datos');
+                $("#btn-cerrar-modal").hide();
+                $("#modalMensajes").modal("show");
+            },
+            success: function (response) {
+                $("#modalMensajes").modal("hide");
+                $("#efectivo-ventas-form").val("");
+                $("#codplato").val("");
+                $("#cantplato").val("");
+                location.reload();
+            },
+            error: function (error) { 
+                console.log("error"); 
+            }
+        });
+    }
+    else{
+        $("#btn-cerrar-modal").show();
+        $("#modalMensajesLabel").text("Error al momento de cobrar el efectivo");
+        $(".modal-body").html("Esta seguro que cobro bien el efectivo? </br>Efectivo: "+ ($("#efectivo-ventas-form").val() > 0 ? $("#efectivo-ventas-form").val():0 )  +"</br>Cambio: "+$('#cambio-ventas-form').text());
+        $("#modalMensajes").modal("show");
+    }
+    
+});
+
+
+
+/*
+* Borrar la session del usuario
+*
+*/
+$('#cerrar-session-funcionario').on('click',function(){
+    let id_funcionario=parseInt($("#id_funcionario").text());
     let csrf=$("input[name=_token]").val();
     $.ajax({
         type: "POST",
-        url: '/buscarProductos',
-        data: {"_token":csrf,
-            "codigoProducto":codigoDeProductoBuscar},
-        
+        url: '/cerrarSession',
+        data: {"_token":csrf},
         success: function (response) {
-            let respuestaConvertida = $.parseJSON(response);
-            if(respuestaConvertida.descripcion === null && respuestaConvertida.precio === null )
+            if(response == 1)
             {
-                $("#modalMensajesLabel").text("No se encontro le CODIGO DE PLATO introducido");
-                $(".modal-body").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
-                $("#modalMensajes").modal("show");
+                $(location).prop('href', 'http://localhost:8000/login')
             }
             else{
-                console.log((respuestaConvertida.precio).substring(1));
+                console.log("Error al momento de cerrar la session");
             }
         },
         error: function (error) { 

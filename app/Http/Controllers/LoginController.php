@@ -21,10 +21,39 @@ class LoginController extends Controller
         $identificadorPersonaBD= Persona::where("ci",$request["usuario"])->value("id_persona");
         $identificadorFuncionarioDB= Funcionario::where("id_pers",$identificadorPersonaBD)->value("id_funcionario");
         $contraseniaFuncionarioDBCredenciales= Credenciales::where("id_func",$identificadorFuncionarioDB)->value("contrasenia");
-        
         if ($request["usuario"] == Credenciales::where("id_func",$identificadorFuncionarioDB)->value("usuario") and password_verify($request["password"],$contraseniaFuncionarioDBCredenciales))
         {
-            return redirect('/');    
+            session_start();
+            $datosPersonaLogin=Persona::where("id_persona",$identificadorPersonaBD)->first();
+            $datosfuncionarioLogin=Funcionario::where("id_pers",$datosPersonaLogin->id_persona)->first();
+            
+            $_SESSION["id_persona"] = $datosPersonaLogin->id_persona;
+            $_SESSION["nombre"] = $datosPersonaLogin->nombre;
+            $_SESSION["ap_pat"] = $datosPersonaLogin->ap_pat;
+            $_SESSION["ap_mat"] = $datosPersonaLogin->ap_mat;
+            //$_SESSION["ci"] = "Pepito Conejo";
+            //$_SESSION["fec_nac"] = "Pepito Conejo";
+            //$_SESSION["tel_cel"] = "Pepito Conejo";
+            //$_SESSION["domicilio"] = "Pepito Conejo";
+            $_SESSION["id_funcionario"] = $datosfuncionarioLogin->id_funcionario;
+            $_SESSION["codigo_funcionario"] = $datosfuncionarioLogin->codigo_funcionario;
+            $_SESSION["cargo"] = $datosfuncionarioLogin->cargo;
+            //$_SESSION["email"] = "Pepito Conejo";
+            if (strtoupper($datosfuncionarioLogin->cargo) == "CAJERO")
+            {
+                return redirect()->route('venta.Productos');    
+            }
+            else{
+                return view('venta.Productos',[
+                    "idpersona"=>$datosPersonaLogin->id_persona,
+                    "nombre"=>$datosPersonaLogin->nombre,
+                    "appat"=>$datosPersonaLogin->ap_pat,
+                    "apmat"=>$datosPersonaLogin->ap_mat,
+                    "codfuncionario"=>$datosfuncionarioLogin->codigo_funcionario,
+                    "cargo"=>$datosfuncionarioLogin->cargo
+                ]);
+                //return redirect()->route('admin.plantilla');    
+            }
         }
         else{
             return redirect('/login');
@@ -128,5 +157,12 @@ class LoginController extends Controller
             "email"=>$funcionario->email,
             "domicilio"=>$persona->domicilio
         ]);   
+    }
+
+    public function borrarSessione()
+    {
+        session_start();
+        $_SESSION = array();
+        return (session_destroy());
     }
 }

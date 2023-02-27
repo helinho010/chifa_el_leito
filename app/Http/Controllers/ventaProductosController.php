@@ -62,4 +62,11 @@ class ventaProductosController extends Controller
             //"imagen"=>$producto->imagen
         ]);   
     }
+
+    public function imprimirDetalleVenta(Request $request)
+    {
+        sleep(5);
+        return $request;
+    }
+
 }
