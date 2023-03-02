@@ -26,14 +26,14 @@ Route::get('/login', function () {
     return view('login');
 })->name('inicio.session');
 Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin'])->name('auth.login');
-Route::post('/cerrarSession',[LoginController::class, 'borrarSessione'])->name('cerrar.session');
+Route::post('/cerrarSession',[LoginController::class, 'borrarSession'])->name('cerrar.session');
 
 
 
 Route::get('/ventaProductos', function () {
     return view('ventaProductos');
 })->name('venta.Productos');
-Route::post('/imprimirDetalleVentaFuncionario',[ventaProductosController::class, 'imprimirDetalleVenta'])->name('buscar.producto');
+Route::post('/imprimirDetalleVentaFuncionario',[ventaProductosController::class, 'imprimirDetalleVenta'])->name('imprimir.detalleVenta');
 
 
 
@@ -60,3 +60,22 @@ Route::get('/mostrarProducto/{id}/{mensaje}',[ventaProductosController::class, '
 Route::get('/registroProducto', function () {
     return view('formAddProducto');
 })->name('form.add.producto');
+
+
+
+/*
+* Ruta de Prueba de impresion
+*/
+//Route::get('/imp',[ventaProductosController::class, 'imprimirDetalleVenta'])->name('imprimir');
+
+
+
+
+
+
+/*
+* Admin - Plantilla
+*/
+Route::get('/admin',function(){
+    return view('admin-plantilla.index');
+})->name('admin.plantilla');

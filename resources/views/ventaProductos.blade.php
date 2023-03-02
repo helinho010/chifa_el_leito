@@ -11,7 +11,12 @@
   </div>
   <div class="row">
       <div class="col-md-7">
-          <div class="datos-dia-responsable">
+          <div class="row">
+            Datos del funcionario: 
+          </div>
+          <br>
+          <div class="row">
+            <div class="datos-dia-responsable">
               <div class="fecha">
                   Fecha: {{date("d/m/Y")}}
               </div>
@@ -25,12 +30,37 @@
                   Codigo Cajero: {{$_SESSION["codigo_funcionario"]}}
               </div>      
           </div>
+          </div>
       </div>
       <div class="col-md-5">
         <button id="cerrar-session-funcionario" type="button" class="btn-accciones-funcionario btn-outline-primary">Cerrar Sesion</button>
         <button type="button" class="btn-accciones-funcionario btn-outline-success">Reporte</button>
       </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-12">
+        <div class="row text-center">
+          Datos del cliente: 
+        </div>
+        <br>
+        <div class="row">
+          <form class="form-inline">
+            <div class="form-group mx-sm-3 mb-2">              
+              <label for="cliente_nomre_razonsocial">Nombre o Razon Social</label>&nbsp;&nbsp;
+              <input type="text" class="form-control" id="cliente_nombre_razonsocial" value="Sin Nombre" placeholder="Nombre o Razon Social">
+            </div>
+            <br>
+            <div class="form-group mx-sm-3 mb-2">
+              <label for="cliente_nit_ci">Nit o CI</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="text" class="form-control" value="0" id="cliente_nit_ci" placeholder="Nit o CI">
+            </div>
+          </form>
+        </div>
+        <br>
+    </div>
+  </div>
+
   <div class="row">
       <div class="col-md-9">
           <form method="post">
@@ -132,5 +162,12 @@
     window.location.href="http://localhost:8000/login";
   </script>
 @endif
+<script>
+  var url_aceptar= '{{url("/buscarProductos")}}';
+  var url_cerrar_session = '{{url("/cerrarSession")}}';
+  var url_login = '{{url("/login")}}';
+  var url_principal= '{{url("/")}}'
+  var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}'
+</script>
 @include('plantilla.pie')
 

@@ -44,15 +44,15 @@ class LoginController extends Controller
                 return redirect()->route('venta.Productos');    
             }
             else{
-                return view('venta.Productos',[
+                /*return view('venta.Productos',[
                     "idpersona"=>$datosPersonaLogin->id_persona,
                     "nombre"=>$datosPersonaLogin->nombre,
                     "appat"=>$datosPersonaLogin->ap_pat,
                     "apmat"=>$datosPersonaLogin->ap_mat,
                     "codfuncionario"=>$datosfuncionarioLogin->codigo_funcionario,
                     "cargo"=>$datosfuncionarioLogin->cargo
-                ]);
-                //return redirect()->route('admin.plantilla');    
+                ]);*/
+                return redirect()->route('admin.plantilla');    
             }
         }
         else{
@@ -159,7 +159,7 @@ class LoginController extends Controller
         ]);   
     }
 
-    public function borrarSessione()
+    public function borrarSession(Request $request)
     {
         session_start();
         $_SESSION = array();
