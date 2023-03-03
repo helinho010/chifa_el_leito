@@ -44,7 +44,7 @@
           </tr>
         </tbody>
       </table>
-      <a href="{{route('bienvenido')}}" class="btn btn-success">Volver</a>
+      <a href="{{route('admin.plantilla')}}" class="btn btn-success">Volver</a>
     </div>
   </div>
 @endisset

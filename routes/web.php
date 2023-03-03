@@ -34,6 +34,7 @@ Route::get('/ventaProductos', function () {
     return view('ventaProductos');
 })->name('venta.Productos');
 Route::post('/imprimirDetalleVentaFuncionario',[ventaProductosController::class, 'imprimirDetalleVenta'])->name('imprimir.detalleVenta');
+Route::post('/reporteArqueoFuncionario',[ventaProductosController::class, 'reporteArqueoFuncionario']);
 
 
 

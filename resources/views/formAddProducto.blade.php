@@ -1,3 +1,8 @@
+@php
+  session_start();
+  date_default_timezone_set('America/La_Paz');  
+@endphp
+@if (!empty($_SESSION))
 @include('plantilla.cabecera')
 @section('nombreIcono','login.png')
 @section('nombreDocumento',"Inicio Session")
@@ -73,3 +78,8 @@
   Yo &hearts; la Chifa El Leito !
 </div>
 @include('plantilla.pie')
+@else
+<script>
+  window.location.href='{{url("/login")}}';
+</script>
+@endif

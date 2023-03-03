@@ -15,7 +15,7 @@ function autofocus()
 
 function imp_detalle_ventas()
 {
-        if($("#efectivo-ventas-form").val() > 0 && parseInt($("#cambio-ventas-form").text())>=0 && $('tr').length > 5)
+        if(/*$("#efectivo-ventas-form").val() > 0 && parseInt($("#cambio-ventas-form").text())>=0 &&*/ $('tr').length > 5)
         {
             let csrf=$("input[name=_token]").val();
             let cliente_nombre_razonsocial=$("#cliente_nombre_razonsocial").val();
@@ -61,7 +61,7 @@ function imp_detalle_ventas()
                 success: function (response) {
                     $("#cliente_nombre_razonsocial").val("Sin Nombre");
                     $("#cliente_nit_ci").val("0");
-                    $("#efectivo-ventas-form").val("");
+                    $("#efectivo-ventas-form").val("0");
                     $("#codplato").val("");
                     $("#cantplato").val("");
                     $("#modalMensajes").modal("hide");
@@ -232,9 +232,19 @@ $("#efectivo-ventas-form").keypress(function(e) {
 });
 
 /*
+* Captura el boton de la modal que muestra mensajes
+*/
+$("#btn-cerrar-modal").on("click",function(){
+    $("#codplato").focus();
+    $("#codplato").select();
+});
+
+/*
 * Funcion para imprimir el detalle de ventas
 */
-$("#imprimirDetalleVentaProducto").on("click",imp_detalle_ventas());
+$("#imprimirDetalleVentaProducto").on("click",function(){
+    imp_detalle_ventas();
+});
 
 /*
 * Imprirmir con F2 del teclado
@@ -265,6 +275,28 @@ $('#cerrar-session-funcionario').on('click',function(){
             else{
                 console.log("Error al momento de cerrar la session: "+response);
             }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+$("#reporte-arqueo-funcionario").click(function(){
+    let csrf=$("input[name=_token]").val();
+    $.ajax({
+        type: "POST",
+        url: url_reporte_arqueo_funcionario,
+        data: {"_token":csrf},
+        beforeSend: function(){
+            $("#modalMensajesLabel").text("Procesando...");
+            $(".modal-body").html('Espere un momento por favor, Espere mientras termine de imprimir');
+            $("#btn-cerrar-modal").hide();
+            $("#modalMensajes").modal("show");
+        },
+        success: function (response) {
+            $("#modalMensajes").modal('hide');
+            console.log(response);
         },
         error: function (error) {
             console.log(error);

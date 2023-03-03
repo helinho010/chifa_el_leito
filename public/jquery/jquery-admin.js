@@ -1,6 +1,5 @@
 $(document).ready(function(){
     $('#totalVentaHoy').text("Bs. Infinito");
-    alert("como estas");
 });
 
 
