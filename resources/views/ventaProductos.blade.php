@@ -3,7 +3,7 @@
   session_start();
   date_default_timezone_set('America/La_Paz');  
 @endphp
-@if (!empty($_SESSION))
+@if (!empty($_SESSION) and strtoupper($_SESSION['cargo']) == 'CAJERO' )
 <div class="container detalleDeVentaFuncionario">
   <div class="row">
       <div class="col-md-12 nombreEntidad text-center">
@@ -168,7 +168,7 @@
   var url_aceptar= '{{url("/buscarProductos")}}';
   var url_cerrar_session = '{{url("/cerrarSession")}}';
   var url_reporte_arqueo_funcionario = '{{url("/reporteArqueoFuncionario")}}';
-  var url_login = '{{url("/login")}}';
+  var url_login = '{{url("/")}}';
   var url_principal= '{{url("/")}}'
   var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}'
 </script>

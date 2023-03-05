@@ -2,7 +2,7 @@
   session_start();
   date_default_timezone_set('America/La_Paz');  
 @endphp
-@if (!empty($_SESSION))
+@if (!empty($_SESSION) and strtoupper($_SESSION['cargo']) == 'CAJERO')
 @include('plantilla.cabecera')
 @section('nombreIcono','login.png')
 @section('nombreDocumento',"Inicio Session")

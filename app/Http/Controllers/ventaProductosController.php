@@ -9,6 +9,7 @@ use App\Models\DetalleVenta;
 use App\Models\Venta;
 use App\Models\Persona;
 use App\Models\Cliente;
+use App\Models\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use Luecano\NumeroALetras\NumeroALetras;
@@ -126,7 +127,7 @@ class ventaProductosController extends Controller
 	    $connector = new WindowsPrintConnector($nombreImpresora);
 	    $impresora = new Printer($connector);
 	    $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(5,5);
+        //$impresora->setTextSize(5,5);
         $impresora->text("<< CHIFA EL LEITO >>\n");
         $impresora->feed(5);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
@@ -176,7 +177,7 @@ class ventaProductosController extends Controller
     public function reporteArqueoFuncionario(Request $request)
     {
         session_start();
-        $ids_ventas_realizadas=Venta::where("id_func",$_SESSION["id_funcionario"])->get();
+        $ids_ventas_realizadas= Venta::where("id_func",'=',$_SESSION["id_funcionario"])->get();
         if($ids_ventas_realizadas->count()>0){
             $nombreImpresora = "LEITO";
             $connector = new WindowsPrintConnector($nombreImpresora);
@@ -193,17 +194,29 @@ class ventaProductosController extends Controller
             $impresora->text("----------------------------------------\n");
             $sumaTotalTablaVenta=0;
             $sumaTotalTablaDetalleVenta=0;
+            //variable de control para saber si tiene ventas realizadas
+            $contVentasRealizadas=0;
             foreach ($ids_ventas_realizadas as $key => $value) {
-                $sumaTotalTablaVenta=$sumaTotalTablaDetalleVenta+$value->total;
-                $detalleVentaDelId=DetalleVenta::where("id_vent",$value->id_venta)->get();
-                foreach ($detalleVentaDelId as $key2 => $value2) {
-                    $sumaTotalTablaDetalleVenta=$sumaTotalTablaDetalleVenta+($value2->cantidad*$value2->precio);
-                    $c=$this->espaciosImprimirDetalleVentas($value2->id_cod_prod, 9);
-                    $ca=$this->espaciosImprimirDetalleVentas($value2->cantidad, 9);
-                    $p=$value2->precio;
-                    $tr=$this->espaciosImprimirDetalleVentas(floatval($ca)*floatval($p), 9);
-                    $impresora->text("$c $ca $tr"."\n");
+                if(substr($value->fecha_venta,0,strpos($value->fecha_venta," ")) == date("Y-m-d"))
+                {
+                    $sumaTotalTablaVenta=$sumaTotalTablaDetalleVenta+$value->total;
+                    $detalleVentaDelId=DetalleVenta::where("id_vent",$value->id_venta)->get();
+                    foreach ($detalleVentaDelId as $key2 => $value2) {
+                        $sumaTotalTablaDetalleVenta=$sumaTotalTablaDetalleVenta+($value2->cantidad*$value2->precio);
+                        $c=$this->espaciosImprimirDetalleVentas($value2->id_cod_prod, 9);
+                        $ca=$this->espaciosImprimirDetalleVentas($value2->cantidad, 9);
+                        $p=$value2->precio;
+                        $tr=$this->espaciosImprimirDetalleVentas(floatval($ca)*floatval($p), 9);
+                        $impresora->text("$c $ca $tr"."\n");
+                        $contVentasRealizadas++;
+                    }
                 }
+            }
+            if ($contVentasRealizadas==0) 
+            {
+                $impresora->setJustification(Printer::JUSTIFY_CENTER);
+                $impresora->text("SIN REGISTROS DE VENTAS\n");    
+                $sumaTotalTablaDetalleVenta=0;
             }
             $impresora->text("----------------------------------------\n");
             $impresora->setJustification(Printer::JUSTIFY_CENTER);

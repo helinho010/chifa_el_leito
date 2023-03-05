@@ -2,10 +2,9 @@
   session_start();
 
 @endphp
-@if (!empty($_SESSION))
+@if (!empty($_SESSION) and strtoupper($_SESSION['cargo']) == 'ADMINISTRADOR' )
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <title>ADMIN</title>
@@ -79,6 +78,12 @@
                             <a href="{{url('/registroProducto')}}" class="dropdown-item">Nuevo Producto</a>
                             <a href="signup.html" class="dropdown-item">Actulizar Produc.</a>
                             <a href="404.html" class="dropdown-item">Listar Producto</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th me-2"></i>Reportes</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="{{url('/registroProducto')}}" class="dropdown-item">Reporte Cajeros</a>
                         </div>
                     </div>
                     <a href="#" class="nav-item nav-link" id="cerrar-session-admin"><i class="fa fa-user me-2"></i>Cerrar Sesion</a>
@@ -204,7 +209,7 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2" >Total Venta hoy</p>
-                                <h6 class="mb-0" id="totalVentaHoy">Bs. 1234</h6>
+                                <h6 class="mb-0" id="totalVentaHoy">Bs. 0</h6>
                             </div>
                         </div>
                     </div>
@@ -213,7 +218,7 @@
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0" id="totalVentaMes">Bs. 0</h6>
                             </div>
                         </div>
                     </div>
@@ -228,10 +233,12 @@
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
+                                <h6 class="mb-0">Productos mas vendidos</h6>
+                                <!--a href="">Show All</a-->
                             </div>
-                            <canvas id="worldwide-sales"></canvas>
+                            <div class="text-center" style="width: 400px !important; height: 500px !important;">
+                                <canvas id="worldwide-sales" ></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +247,7 @@
 
 
             <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
+            <!--div class="container-fluid pt-4 px-4">
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Recent Salse</h6>
@@ -309,7 +316,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div-->
             <!-- Recent Sales End -->
 
         </div>
@@ -320,10 +327,32 @@
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
+    <!--Modal de mensajes-->        
+        <!-- Modal -->
+        <div class="modal fade" id="modalMensajesAdmin" tabindex="-1" aria-labelledby="modalAdmin" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalAdmin">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                ...
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    <!--Fin Modal de mensajes-->
+
     <!-- JavaScript Libraries -->
     <script src="{{asset("jquery/jquery-3.6.3.min.js")}}"></script>
     <script src="{{asset('js/bootstrap.js')}}"></script>
-    <script src="{{asset('jquery/jquery-admin.js')}}"></script>
     <script src="{{asset('lib/chart/chart.min.js')}}"></script>
     <script src="{{asset('lib/easing/easing.min.js')}}"></script>
     <script src="{{asset('lib/waypoints/waypoints.min.js')}}"></script>
@@ -334,6 +363,7 @@
 
     <!-- Template Javascript -->
     <script src="{{asset('js/main.js')}}"></script>
+    <script src="{{asset('jquery/jquery-admin.js')}}"></script>
 
     <script>
         var url_cerrar_session = "{{url('/cerrarSession')}}";
@@ -350,7 +380,9 @@
   var url_aceptar= '{{url("/buscarProductos")}}';
   var url_cerrar_session = '{{url("/cerrarSession")}}';
   var url_reporte_arqueo_funcionario = '{{url("/reporteArqueoFuncionario")}}';
-  var url_login = '{{url("/login")}}';
-  var url_principal= '{{url("/")}}'
-  var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}'
+  var url_login = '{{url("/")}}';
+  var url_principal= '{{url("/")}}';
+  var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}';
+  var url_actualizacionDeDatos = '{{url("/actualizacionDeDatos")}}';
+
 </script>

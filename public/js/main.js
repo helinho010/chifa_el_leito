@@ -38,7 +38,7 @@
         $('.progress .progress-bar').each(function () {
             $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
-    }, {offset: '80%'});
+    }, {offset: '10%'});
 
 
     // Calender
@@ -59,25 +59,25 @@
     });
 
 
-    // Worldwide Sales Chart
-    var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
+    // Worldwide Sales Chart //Productos mas vendidos
+    /*var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022","2060"],
             datasets: [{
                     label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
+                    data: [15, 30, 55, 65, 60, 80, 95, 100],
                     backgroundColor: "rgba(0, 156, 255, .7)"
                 },
                 {
                     label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
+                    data: [8, 35, 40, 60, 70, 55, 75, 100],
                     backgroundColor: "rgba(0, 156, 255, .5)"
                 },
                 {
                     label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
+                    data: [12, 25, 45, 55, 65, 70, 60, 100],
                     backgroundColor: "rgba(0, 156, 255, .3)"
                 }
             ]
@@ -85,15 +85,16 @@
         options: {
             responsive: true
         }
-    });
+    });*/
+    
 
 
-    // Salse & Revenue Chart
+    // Salse & Revenue Chart 
     var ctx2 = $("#salse-revenue").get(0).getContext("2d");
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
+            labels: ["2016", "2017", "2018", "2019", "2020", "2021","2022"],
             datasets: [{
                     label: "Salse",
                     data: [15, 30, 55, 45, 70, 65, 85],

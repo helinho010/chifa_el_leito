@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PlantillaAdminController;
 use App\Http\Controllers\ventaProductosController;
 
 /*
@@ -16,13 +17,13 @@ use App\Http\Controllers\ventaProductosController;
 */
 
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
 })->name('bienvenido');
+*/
 
 
-
-Route::get('/login', function () {
+Route::get('/', function () {
     return view('login');
 })->name('inicio.session');
 Route::post('/autenticacionLogin',[LoginController::class, 'autenticacionLogin'])->name('auth.login');
@@ -80,3 +81,5 @@ Route::get('/registroProducto', function () {
 Route::get('/admin',function(){
     return view('admin-plantilla.index');
 })->name('admin.plantilla');
+
+Route::post('/actualizacionDeDatos',[PlantillaAdminController::class,'actualizacionDeDatos']);
