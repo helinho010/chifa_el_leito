@@ -36,6 +36,7 @@
       <div class="col-md-5">
         <button id="cerrar-session-funcionario" type="button" class="btn-accciones-funcionario btn-outline-primary">Cerrar Sesion</button>
         <button type="button" id="reporte-arqueo-funcionario" class="btn-accciones-funcionario btn-outline-success">Reporte</button>
+        <button type="button" id="cambiar-password-funcionario" class="btn-accciones-funcionario btn-outline-danger">Cambiar Password</button>
       </div>
   </div>
 
@@ -148,7 +149,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" id="modal-body-mensajes">
       ...
     </div>
     <div class="modal-footer">
@@ -158,6 +159,64 @@
 </div>
 </div>
 <!--Fin modal de mensajes-->
+
+<!--Modal de reporte cajero-->
+<div class="modal fade" id="modalReporteCajero" tabindex="-1" aria-labelledby="modalReporteCajeroLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalReporteCajeroLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body-reporte-cajero">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="btn-imprimir-reporte-cajero">imprimir</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <!--Fin modal de reporte cajero-->
+
+
+<!--Modal de Cambio de Contrasenia-->
+<div class="modal fade" id="modalCambioPasswd" tabindex="-1" aria-labelledby="modalCambioPasswdLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCambioPasswdLabel">Cambio de Contraseña</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body-cambio-passwd">
+        <form>
+          <div class="form-group">
+          <label for="ant-passwd">Actual Contraseña</label>
+          <input type="password" class="form-control" id="ant-passwd" aria-describedby="emailHelp">
+          </div>
+          <div class="form-group">
+          <label for="new-passwd">Nueva Contraseña</label>
+          <input type="password" class="form-control" id="new-passwd">
+          </div>
+          <div class="form-group">
+          <label for="new-passwd">Confirme Nueva Contraseña</label>
+          <input type="password" class="form-control" id="conf-passwd">
+          </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="guardar-cabio-passwd">Guardar</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!--Fin modal de mensajes-->
 
 @else
   <script>
@@ -169,8 +228,10 @@
   var url_cerrar_session = '{{url("/cerrarSession")}}';
   var url_reporte_arqueo_funcionario = '{{url("/reporteArqueoFuncionario")}}';
   var url_login = '{{url("/")}}';
-  var url_principal= '{{url("/")}}'
-  var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}'
+  var url_principal= '{{url("/")}}';
+  var url_imprimir = '{{url("/imprimirDetalleVentaFuncionario")}}';
+  var url_cambio_password='{{url("/cambioPassword")}}';
+  var url_imprimir_reporte_arqueo_funcionario_modal='{{url("/imprimirDetalleVentaFuncionarioModal")}}';
 </script>
 @include('plantilla.pie')
 

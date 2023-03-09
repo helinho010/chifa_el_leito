@@ -25,10 +25,10 @@
             <td><img src="{{asset('img/iconos/icono_descripcion.png')}}" alt="descripcion">Descripcion de Producto: <i class="text-success">{{$descripcion}}</i></td>
           </tr>
           <tr>
-            <td><img src="{{asset('img/iconos/icono_precio.png')}}" alt="Precio">Precio Bs: <i class="text-success">{{substr($precio,1)}}</i></td>
+            <td><img src="{{asset('img/iconos/icono_precio.png')}}" alt="Precio">Precio Bs: <i class="text-success">{{$precio}}</i></td>
           </tr>
           <tr>
-            <td><img src="{{asset('img/iconos/icono_imagen.png')}}" alt="imagen">Imagen del Producto: <i class="text-success">@{{$imagen}}</i></td>
+            <td><img src="{{asset('img/iconos/icono_imagen.png')}}" alt="imagen">Imagen del Producto: <i class="text-success">...</i></td>
           </tr>
         </tbody>
       </table>

@@ -2,7 +2,7 @@
   session_start();
   date_default_timezone_set('America/La_Paz');  
 @endphp
-@if (!empty($_SESSION) and strtoupper($_SESSION['cargo']) == 'CAJERO')
+@if (!empty($_SESSION) and strtoupper($_SESSION['cargo']) == 'ADMINISTRADOR')
 @include('plantilla.cabecera')
 @section('nombreIcono','login.png')
 @section('nombreDocumento',"Inicio Session")
@@ -35,7 +35,7 @@
                   </div>
               @enderror
             </div>
-            <div class="row">
+            <div class="row">(*)
                 <input type="text" value="{{ old('descripcion')}}" name="descripcion" id="descripcione" class="form__input" placeholder="Descripcion del Producto">
                 @error('descripcion')
                     <div style="color: red; font-size: 13px; margin-top:5px; margin-left:10px">
@@ -43,7 +43,7 @@
                     </div>
                 @enderror
               </div>
-            <div class="row">
+            <div class="row">(*)
                 <input type="number" value="{{ old('precio')}}" name="precio" id="precio" class="form__input" placeholder="Precio del Producto">
                 @error('precio')
                     <div style="color: red; font-size: 13px; margin-top:5px; margin-left:10px">
@@ -80,6 +80,6 @@
 @include('plantilla.pie')
 @else
 <script>
-  window.location.href='{{url("/login")}}';
+  window.location.href='{{url("/")}}';
 </script>
 @endif

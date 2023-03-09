@@ -10,7 +10,10 @@ function calcularMontoTotalCompra(montosPlatos)
 function autofocus()
 {
     $("#codplato").focus();
-    $("#codplato").select();
+    $("#cantplato").val("");
+    // El select selecciona el contenido del input 
+    //$("#codplato").select();
+    $("#codplato").val("");
 }
 
 function imp_detalle_ventas()
@@ -54,7 +57,7 @@ function imp_detalle_ventas()
                 data: datosJsonVentaDetalleFuncionario,
                 beforeSend: function(){
                     $("#modalMensajesLabel").text("Procesando...");
-                    $(".modal-body").html('Espere un momento por favor, Cargando datos a la base de datos');
+                    $("#modal-body-mensajes").html('Espere un momento por favor, Cargando datos a la base de datos');
                     $("#btn-cerrar-modal").hide();
                     $("#modalMensajes").modal("show");
                 },
@@ -72,7 +75,7 @@ function imp_detalle_ventas()
                     $("#modalMensajes").modal("hide");
                     $("#btn-cerrar-modal").show();
                     $("#modalMensajesLabel").text("HUBO UN ERROR");
-                    $(".modal-body").text("Error en la respuesta del servidor, por favor contactese con el tecnico");
+                    $("#modal-body-mensajes").text("Error en la respuesta del servidor, por favor contactese con el tecnico");
                     $("#modalMensajes").modal("show");
                     console.log(error);
                 }
@@ -92,7 +95,7 @@ function imp_detalle_ventas()
             }
             $("#btn-cerrar-modal").show();
             $("#modalMensajesLabel").text(mensajeErrorCabecera);
-            $(".modal-body").html(mensajeErrorCuerpo);
+            $("#modal-body-mensajes").html(mensajeErrorCuerpo);
             $("#modalMensajes").modal("show");
         }
 }
@@ -126,7 +129,7 @@ $("#btn-ventas-aceptar").on("click", function (e) {
             {
                 $("#btn-cerrar-modal").show();
                 $("#modalMensajesLabel").text("El CODIGO DE PLATO introducido es invalido");
-                $(".modal-body").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
+                $("#modal-body-mensajes").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
                 $("#modalMensajes").modal("show");
             }
             else{
@@ -159,7 +162,7 @@ $("#btn-ventas-aceptar").on("click", function (e) {
                     {
                         $("#btn-cerrar-modal").show();
                         $("#modalMensajesLabel").text("ERROR EN LA ** CANTIDAD **");
-                        $(".modal-body").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
+                        $("#modal-body-mensajes").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
                         $("#modalMensajes").modal("show");
                     }
             }
@@ -231,13 +234,108 @@ $("#efectivo-ventas-form").keypress(function(e) {
     }
 });
 
+
+/*
+* Captura la tecla enter en el input codigo plato y el cursor se mueve automaticamente al input cantplato
+*/
+$("#codplato").keypress(function(e) {
+    if(e.which == 13) {
+      e.preventDefault();
+      if($("#codplato").val()=="")
+      {}
+      else{
+        $("#cantplato").focus();  
+      }  
+    }
+});
+
+
+/*
+* Captura la tecla enter en el input cantplato e inserta el registro al detalle de ventas
+*/
+$("#cantplato").keypress(function(e) {
+    if(e.which == 13) {
+      e.preventDefault();
+      if($("#cantplato").val()=="")
+      {}
+      else
+      {
+        e.preventDefault();
+        const subtotal=[];
+        let codigoDeProductoBuscar=($("#codplato").val()).toUpperCase();
+        let formCantPlato= parseInt($("#cantplato").val());
+        let csrf=$("input[name=_token]").val();
+        $.ajax({
+            type: 'POST',
+            url: url_aceptar,
+            data: {"_token":csrf,
+                "codigoProducto":codigoDeProductoBuscar},
+
+            success: function (response) {
+                let respuestaConvertida = $.parseJSON(response);
+                if(respuestaConvertida.descripcion === null && respuestaConvertida.precio === null )
+                {
+                    $("#btn-cerrar-modal").show();
+                    $("#modalMensajesLabel").text("El CODIGO DE PLATO introducido es invalido");
+                    $("#modal-body-mensajes").text("El "+codigoDeProductoBuscar+" no se encontro en la Base de Datos");
+                    $("#modalMensajes").modal("show");
+                }
+                else{
+                    if(formCantPlato>0)
+                        {
+
+                            var trstring='<tr id="reg-ventas"><th scope="row" class="text-uppercase" id="cod_prod">'+codigoDeProductoBuscar+'</th><td class="text-uppercase" id="descrp_prod">'+respuestaConvertida.descripcion+'</td><td id="cantidad-ventas-form">'+formCantPlato+'</td><td id="punitario-ventas-form">'+(respuestaConvertida.precio).substring(0,(respuestaConvertida.precio).length-1)+'</td><td id="subtotal-ventas-form"></td></tr>'
+                            $("#filasDetalleVentas").before(trstring);
+
+                            $("tr").each(function(){
+                                if($(this).attr("id") == "reg-ventas")
+                                {
+                                    if (!($(this).find('#cantidad-ventas-form').text()))
+                                    {}
+                                    else{
+                                    cantidad=parseInt($(this).find('#cantidad-ventas-form').text());
+                                    precioPlato=parseFloat($(this).find('#punitario-ventas-form').text());
+                                    $(this).find("#subtotal-ventas-form").text((cantidad*precioPlato).toFixed(2));
+                                    subtotal.push((cantidad*precioPlato).toFixed(2));
+                                    }
+                                }
+                            });
+
+                            let totalCobrar=calcularMontoTotalCompra(subtotal);
+                            $("#cobrar-ventas-form").text(totalCobrar.toFixed(2));
+                            let efectivoRecido=$("#efectivo-ventas-form").val();
+                            $("#cambio-ventas-form").text((efectivoRecido-totalCobrar).toFixed(2));
+                        }
+                        else
+                        {
+                            $("#btn-cerrar-modal").show();
+                            $("#modalMensajesLabel").text("ERROR EN LA ** CANTIDAD **");
+                            $("#modal-body-mensajes").text("El dato debe ser un NUMERO o mayor a 0 (cero)");
+                            $("#modalMensajes").modal("show");
+                        }
+                }
+            },
+            error: function (error) {
+                console.log("error: ");
+            }
+        });
+        autofocus();
+      }  
+    }
+});
+
+
+
 /*
 * Captura el boton de la modal que muestra mensajes
 */
-$("#btn-cerrar-modal").on("click",function(){
+$('#modalMensajes').on('hidden.bs.modal', function (event) {
+    event.preventDefault();
+    $("#codplato").val("");
     $("#codplato").focus();
-    $("#codplato").select();
 });
+
+
 
 /*
 * Funcion para imprimir el detalle de ventas
@@ -282,6 +380,9 @@ $('#cerrar-session-funcionario').on('click',function(){
     });
 });
 
+/**
+ * Reporte diario del funcionario (vista previa)
+ */
 $("#reporte-arqueo-funcionario").click(function(){
     let csrf=$("input[name=_token]").val();
     $.ajax({
@@ -290,12 +391,77 @@ $("#reporte-arqueo-funcionario").click(function(){
         data: {"_token":csrf},
         beforeSend: function(){
             $("#modalMensajesLabel").text("Procesando...");
-            $(".modal-body").html('Espere un momento por favor, Espere mientras termine de imprimir');
+            $("#modal-body-mensajes").html('Espere un momento por favor, solicitud en proceso');
             $("#btn-cerrar-modal").hide();
             $("#modalMensajes").modal("show");
         },
         success: function (response) {
-            $("#modalMensajes").modal('hide');
+            let respuestaConvertida = $.parseJSON(response);
+            let cabeceraTablaReporte='<table class="table">\
+            <thead>\
+              <tr>\
+                <th scope="col">#</th>\
+                <th scope="col">Cod.</th>\
+                <th scope="col">Cnt.</th>\
+                <th scope="col">P.U.</th>\
+                <th scope="col">Total</th>\
+              </tr>\
+            </thead>\
+            <tbody>';
+            let cuerpoTablaReporte="";
+            let pieTablaReporte="";
+            if(respuestaConvertida.mensaje)
+            {
+                $("#modalMensajes").modal('hide');
+                $("#modalReporteCajeroLabel").text("Reporte Diario Cajero");
+                $.each(respuestaConvertida.data, function(i, item) {
+                    cuerpoTablaReporte=cuerpoTablaReporte+'<tr>\
+                    <th scope="row">'+(i+1)+'</th>\
+                    <td>'+item.id_cod_prod+'</td>\
+                    <td>'+item.sum+'</td>\
+                    <td>'+item.precio+'</td>\
+                    <td>'+item.sum*item.precio+'</td>\
+                  </tr>';
+                });
+                pieTablaReporte='</tbody>\
+                </table>';
+                $("#modal-body-reporte-cajero").html(cabeceraTablaReporte+cuerpoTablaReporte+pieTablaReporte);
+                $("#modalReporteCajero").modal("show");
+            }else{
+                $("#modalMensajes").modal('hide');
+                $("#modalReporteCajeroLabel").text("Reporte Diario Cajero");
+                $("#modal-body-reporte-cajero").html("El cajero no tiene transacciones...");
+                $("#modalReporteCajero").modal("show");
+            }
+            console.log(respuestaConvertida.data);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+/**
+ * Codigo para mandar a imprimir (impresora) el reporte diario del funcionario
+ * Modal de vista previa
+ */
+$("#btn-imprimir-reporte-cajero").on("click",function(){
+    let csrf=$("input[name=_token]").val();
+    $.ajax({
+        type: "POST",
+        url: url_imprimir_reporte_arqueo_funcionario_modal,
+        data: {"_token":csrf},
+        beforeSend: function(){
+            $("#modalReporteCajero").modal('hide');
+            $("#modalMensajesLabel").text("Procesando...");
+            $("#modal-body-mensajes").html('Espere un momento por favor, solicitud en proceso');
+            $("#btn-cerrar-modal").hide();
+            $("#modalMensajes").modal("show");
+        },
+        success: function (response) {
+            let respuestaConvertida = $.parseJSON(response);
+            $("#modalReporteCajero").modal('hide');
+            $("#modalMensajes").modal("hide");
             console.log(response);
         },
         error: function (error) {
@@ -303,3 +469,72 @@ $("#reporte-arqueo-funcionario").click(function(){
         }
     });
 });
+
+$("#cambiar-password-funcionario").on("click",function(){
+    $("#ant-passwd").val("");
+    $("#new-passwd").val("");
+    $("#conf-passwd").val("");
+    $("#modalCambioPasswd").modal("show");
+});
+
+//$('#modalCambioPasswd').on('hidden.bs.modal', function (event) {
+$('#guardar-cabio-passwd').on("click",function(e){
+    let csrf=$("input[name=_token]").val();
+    let antContrasenia=$('#ant-passwd').val();
+    let newContrasenia=$('#new-passwd').val();
+    let confContrasenia=$('#conf-passwd').val();
+    let idFuncionario=($('#id_funcionario').text()).trim();
+    let mensaje="";
+    if(antContrasenia!="" && newContrasenia!="" && confContrasenia!="")
+    {
+        if(newContrasenia==confContrasenia)
+        {
+            $.ajax({
+                type: "POST",
+                url: url_cambio_password,
+                data: {"_token":csrf,
+                       "antContrasenia":antContrasenia,
+                        "newContrasenia":newContrasenia,
+                        "confContrasenia":confContrasenia,
+                        "idfuncionario":idFuncionario
+                      },
+                success: function (response) {
+                    if(response==1)
+                    {
+                        $("#modalCambioPasswd").modal('hide');
+                        $("#modalMensajesLabel").text("CAMBIO DE CONTRASEÑA CORRECTAMENTE");
+                        $("#modal-body-mensajes").html('Su contraseña ha sido actulizada correctamente');
+                        $("#modalMensajes").modal("show");
+                    }else{
+                        $("#modalCambioPasswd").modal('hide');
+                        $("#modalMensajesLabel").text("ERROR EN LA CONTRASEÑA ACTUAL");
+                        $("#modal-body-mensajes").html('La contraseña actual incorrecta, vuelva a intentar por favor');
+                        $("#modalMensajes").modal("show");
+                    }
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        else{
+            $("#modalCambioPasswd").modal('hide');
+            $("#modalMensajesLabel").text("Error al confirmar la contraseña!");
+            $("#modal-body-mensajes").html('El Campo nuevo Password y Confirme Password deben ser iguales, por favor intente de nuevo.');
+            $("#modalMensajes").modal("show");
+            mensaje="El campo Nuevo Password no es igual al campo Confirme Password, estos deben ser iguales!";
+        }
+
+    }
+    else{
+            $("#modalCambioPasswd").modal('hide');
+            $("#modalMensajesLabel").text("Llene todos los campos del formulario!");
+            $("#modal-body-mensajes").html('Para que se pueda actulizar la contraseña, todos los campos del formulario deben tener informacion.');
+            $("#modalMensajes").modal("show");
+            mensaje="Por favor introduzca datos en todos los campos";
+    }
+    console.log(mensaje);
+});
+
+

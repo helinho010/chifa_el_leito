@@ -224,4 +224,13 @@ form{
 .btn-accciones-funcionario
 {
 	border: 1px solid;
+	margin: 8px;
 }
+
+#modal-body-reporte-cajero{
+	height: 550px;
+	overflow-y:auto;
+}
+
+
+

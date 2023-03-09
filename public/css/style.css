@@ -278,3 +278,14 @@ body{
     background: var(--dark);
     border-color: var(--primary);
 }
+
+
+
+#tabla-scroll-funcionario-producto
+{
+  height: 400px;
+  line-height: 1em;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  
+}

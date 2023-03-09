@@ -56,7 +56,7 @@ class LoginController extends Controller
             }
         }
         else{
-            return redirect('/login');
+            return redirect('/');
         }
     }
     /*
@@ -157,6 +157,21 @@ class LoginController extends Controller
             "email"=>$funcionario->email,
             "domicilio"=>$persona->domicilio
         ]);   
+    }
+
+    public function cambioPassword(Request $request)
+    {
+        $mensaje=0;
+        $credencialesFuncionario=Credenciales::where('id_func',trim($request["idfuncionario"]))->first();
+        $contraseniaOriginalDelFuncionario= Credenciales::where("id_func",trim($request['idfuncionario']))->value("contrasenia");
+        if (password_verify(trim($request["antContrasenia"]),$contraseniaOriginalDelFuncionario)){
+            /* Cifrado de password*/
+            $hash_contrasenia=password_hash(trim($request['newContrasenia']),PASSWORD_DEFAULT);
+            $credencialesFuncionario->contrasenia=$hash_contrasenia;
+            $credencialesFuncionario->save();
+            $mensaje=1;
+        }
+        return $mensaje;
     }
 
     public function borrarSession(Request $request)

@@ -9,7 +9,8 @@ use App\Models\DetalleVenta;
 use App\Models\Venta;
 use App\Models\Persona;
 use App\Models\Cliente;
-use App\Models\DB;
+use App\Models\VistaVentaFuncionario;
+use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use Luecano\NumeroALetras\NumeroALetras;
@@ -123,16 +124,20 @@ class ventaProductosController extends Controller
             $datos_detalle_venta->save();
         }
 
-        $nombreImpresora = "LEITO";
+        /*$nombreImpresora = "LEITO";
 	    $connector = new WindowsPrintConnector($nombreImpresora);
 	    $impresora = new Printer($connector);
 	    $impresora->setJustification(Printer::JUSTIFY_CENTER);
         //$impresora->setTextSize(5,5);
         $impresora->text("<< CHIFA EL LEITO >>\n");
-        $impresora->feed(5);
+        $impresora->feed(2);
+        $impresora->text("Mesa:..................."."\n");
+        $impresora->feed(2);
+        $impresora->text("Nombre:..................."."\n");
+        $impresora->feed(2);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->setTextSize(1,1);
-        $impresora->text("Señores: ".$cliente_nu->razon_social."\n");
+        //$impresora->text("Señores: ".$cliente_nu->razon_social."\n");
         $impresora->text("Fecha: ".date("d/m/Y")."  Hora: ".date("H:i")."\n");
         $impresora->text("ID Venta: ".$ultimoRegistroVenta->id_venta."\n");
         $impresora->feed(1);
@@ -169,7 +174,7 @@ class ventaProductosController extends Controller
         $impresora->feed();
         $impresora->cut();
         $impresora->close();
-        sleep(3);
+        sleep(3);*/
         return json_encode(array("estado"=>1));
     }
 
@@ -177,62 +182,81 @@ class ventaProductosController extends Controller
     public function reporteArqueoFuncionario(Request $request)
     {
         session_start();
-        $ids_ventas_realizadas= Venta::where("id_func",'=',$_SESSION["id_funcionario"])->get();
-        if($ids_ventas_realizadas->count()>0){
-            $nombreImpresora = "LEITO";
-            $connector = new WindowsPrintConnector($nombreImpresora);
-            $impresora = new Printer($connector);
-            $impresora->setJustification(Printer::JUSTIFY_CENTER);
-            $impresora->text("<< Reporte >>\n");
-            $impresora->setJustification(Printer::JUSTIFY_LEFT);
-            $impresora->text("USUARIO: ".$_SESSION["nombre"]." ".$_SESSION["ap_pat"]." ".$_SESSION["ap_mat"]."\n");
-            $impresora->text("CODIGO: ".$_SESSION["codigo_funcionario"]."\n");
-            $impresora->text("FECHA: ".date("d/m/Y")."  Hora: ".date("H:i")."\n");
-            $impresora->feed(1);
-            $impresora->text("----------------------------------------\n");
-            $impresora->text("Cod.      Cnt.      Total     \n");
-            $impresora->text("----------------------------------------\n");
-            $sumaTotalTablaVenta=0;
-            $sumaTotalTablaDetalleVenta=0;
-            //variable de control para saber si tiene ventas realizadas
-            $contVentasRealizadas=0;
-            foreach ($ids_ventas_realizadas as $key => $value) {
-                if(substr($value->fecha_venta,0,strpos($value->fecha_venta," ")) == date("Y-m-d"))
-                {
-                    $sumaTotalTablaVenta=$sumaTotalTablaDetalleVenta+$value->total;
-                    $detalleVentaDelId=DetalleVenta::where("id_vent",$value->id_venta)->get();
-                    foreach ($detalleVentaDelId as $key2 => $value2) {
-                        $sumaTotalTablaDetalleVenta=$sumaTotalTablaDetalleVenta+($value2->cantidad*$value2->precio);
-                        $c=$this->espaciosImprimirDetalleVentas($value2->id_cod_prod, 9);
-                        $ca=$this->espaciosImprimirDetalleVentas($value2->cantidad, 9);
-                        $p=$value2->precio;
-                        $tr=$this->espaciosImprimirDetalleVentas(floatval($ca)*floatval($p), 9);
-                        $impresora->text("$c $ca $tr"."\n");
-                        $contVentasRealizadas++;
-                    }
-                }
-            }
-            if ($contVentasRealizadas==0) 
-            {
-                $impresora->setJustification(Printer::JUSTIFY_CENTER);
-                $impresora->text("SIN REGISTROS DE VENTAS\n");    
-                $sumaTotalTablaDetalleVenta=0;
-            }
-            $impresora->text("----------------------------------------\n");
-            $impresora->setJustification(Printer::JUSTIFY_CENTER);
-            $impresora->text("Total Bs.: ".$sumaTotalTablaDetalleVenta."\n");
-            $impresora->feed(1);
-            $impresora->cut();
-            $impresora->close();
-            $mensaje="ok";
+        /**
+        ********* Sql para la consulta **********
+        * select id_cod_prod,detalle,sum(cantidad),precio 
+        * from detalleVentasFuncionario
+        * where id_funcionario = 1
+        *	  and fecha_venta::date = '2023-03-07'
+        * group by id_cod_prod,detalle,precio 
+        * order by
+        *		case
+        *    	when substring(id_cod_prod from '^\d+$') is null then 9999
+        *    	else cast(id_cod_prod as integer)
+        *  		end, id_cod_prod
+        */
+        $ids_ventas_realizadas=VistaVentaFuncionario::selectRaw("id_cod_prod,detalle,sum(cantidad),precio")
+                                   ->whereRaw('id_funcionario='.$_SESSION["id_funcionario"])
+                                   ->where(DB::raw('fecha_venta::date'),"=",date("Y-m-d"))
+                                   ->groupBy(DB::raw('id_cod_prod,detalle,precio'))
+                                   ->orderBy(DB::raw("case when substring(id_cod_prod from '^\d+$') is null then 9999 else cast(id_cod_prod as integer) end, id_cod_prod"))
+                                   ->get();
+        if($ids_ventas_realizadas->count()>0)
+        {
+          $mensaje=true;
         }
         else{
-          $mensaje="El usuario ".$_SESSION['codigo_funcionario']." no tiene ventas realizadas";
-          $sumaTotalTablaVenta=0;
-          $sumaTotalTablaDetalleVenta=0;  
+          $mensaje=false;  
         }
         sleep(3);
-        return json_encode(array("suma1"=>$sumaTotalTablaVenta,"suma2"=>$sumaTotalTablaDetalleVenta,"importante"=>$mensaje));
+        return json_encode(array("mensaje"=>$mensaje,"data"=>$ids_ventas_realizadas));
+    }
+
+    public function imprimirDetalleVentaModal(Request $request)
+    {
+        $datoReporteAImpirmirFuncionario=json_decode($this->reporteArqueoFuncionario($request),true);
+        $nombreImpresora = "LEITO";
+        $connector = new WindowsPrintConnector($nombreImpresora);
+        $impresora = new Printer($connector);
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->text("<< Reporte $_SESSION[cargo]>>\n");
+        $impresora->setJustification(Printer::JUSTIFY_LEFT);
+        $impresora->text("USUARIO: ".$_SESSION["nombre"]." ".$_SESSION["ap_pat"]." ".$_SESSION["ap_mat"]."\n");
+        $impresora->text("CODIGO: ".$_SESSION["codigo_funcionario"]."\n");
+        $impresora->text("FECHA: ".date("d/m/Y")."  Hora: ".date("H:i")."\n");
+        $impresora->feed(1);
+        $impresora->text("----------------------------------------\n");
+        $impresora->text("Cod.      Cnt.      Total     \n");
+        $impresora->text("----------------------------------------\n");
+        if(count($datoReporteAImpirmirFuncionario["data"])>0)
+        {
+            $sumaTotalTablaDetalleVenta=0;
+            foreach ($datoReporteAImpirmirFuncionario["data"] as $key => $value) {
+                $sumaTotalTablaDetalleVenta=$sumaTotalTablaDetalleVenta+($value["sum"]*$value["precio"]);
+                $tr=floatval($value["sum"]*$value["precio"]);
+                $c=$this->espaciosImprimirDetalleVentas($value ["id_cod_prod"], 9);
+                $ca=$this->espaciosImprimirDetalleVentas($value["sum"], 9);
+                $p=$value["precio"];
+                $tr=$this->espaciosImprimirDetalleVentas($tr, 9);
+                $impresora->text("$c $ca $tr"."\n");
+            }
+        }
+        else
+        {
+            $impresora->setJustification(Printer::JUSTIFY_CENTER);
+            $impresora->text("SIN REGISTROS DE VENTAS\n");    
+            $sumaTotalTablaDetalleVenta=0;
+        }
+        $impresora->text("----------------------------------------\n");
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->text("Total Bs.: ".$sumaTotalTablaDetalleVenta."\n");
+        $impresora->feed(1);
+        $impresora->cut();
+        $impresora->close();
+        return json_encode(array("mensaje"=>'ok'));
     }
 
 }
+
+
+            
