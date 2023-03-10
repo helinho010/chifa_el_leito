@@ -107,14 +107,6 @@ class PlantillaAdminController extends Controller
         $mensaje="false";
         if(!(is_null($request["fecha_inicial"]) or is_null($request["fecha_final"])))
         {
-       
-            /*
-            *   Sql para la consulta;
-            *   select id_cod_prod, detalle, sum(cantidad), precio
-            *   from detalle_venta
-            *   where id_vent in (select id_venta from venta where fecha_venta::date between '2023-03-01' and '2023-03-31')
-            *   group by id_cod_prod, detalle, precio
-            */
             /* select id_cod_prod, detalle, sum(cantidad), precio
                from detalle_venta
                where id_vent in (select id_venta from venta where fecha_venta::date between '2023-03-01' and '2023-03-31')

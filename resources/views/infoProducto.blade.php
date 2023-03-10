@@ -13,7 +13,7 @@
   @endif
   <div class="container">
     <div class="row">
-      <h4>Datos del funcionario:</h4>
+      <h4>Datos del Producto:</h4>
     </div>
     <div class="row">
       <table class="table">

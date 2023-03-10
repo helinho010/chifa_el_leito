@@ -124,7 +124,7 @@ class ventaProductosController extends Controller
             $datos_detalle_venta->save();
         }
 
-        /*$nombreImpresora = "LEITO";
+        $nombreImpresora = "LEITO";
 	    $connector = new WindowsPrintConnector($nombreImpresora);
 	    $impresora = new Printer($connector);
 	    $impresora->setJustification(Printer::JUSTIFY_CENTER);
@@ -174,7 +174,7 @@ class ventaProductosController extends Controller
         $impresora->feed();
         $impresora->cut();
         $impresora->close();
-        sleep(3);*/
+        sleep(3);
         return json_encode(array("estado"=>1));
     }
 
