@@ -410,6 +410,7 @@ $("#reporte-arqueo-funcionario").click(function(){
             <tbody>';
             let cuerpoTablaReporte="";
             let pieTablaReporte="";
+            let sumaTotal=0;
             if(respuestaConvertida.mensaje)
             {
                 $("#modalMensajes").modal('hide');
@@ -422,8 +423,12 @@ $("#reporte-arqueo-funcionario").click(function(){
                     <td>'+item.precio+'</td>\
                     <td>'+item.sum*item.precio+'</td>\
                   </tr>';
+                  sumaTotal=sumaTotal+(item.sum*item.precio);
                 });
-                pieTablaReporte='</tbody>\
+                pieTablaReporte='<td colspan="3"></td>\
+                <td>Suma Total Venta:</td>\
+                <td>'+sumaTotal+'</td>\
+                </tbody>\
                 </table>';
                 $("#modal-body-reporte-cajero").html(cabeceraTablaReporte+cuerpoTablaReporte+pieTablaReporte);
                 $("#modalReporteCajero").modal("show");
@@ -433,6 +438,7 @@ $("#reporte-arqueo-funcionario").click(function(){
                 $("#modal-body-reporte-cajero").html("El cajero no tiene transacciones...");
                 $("#modalReporteCajero").modal("show");
             }
+            console.log(sumaTotal);
             console.log(respuestaConvertida.data);
         },
         error: function (error) {

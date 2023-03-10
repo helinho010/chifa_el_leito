@@ -65,9 +65,9 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a class="nav-item nav-link active"><i class="fa fa-tachometer me-2"></i>Dashboard</a>
+                    <a class="nav-item nav-link active"><i class="fa fa-dashboard me-2"></i>Dashboard</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th-list me-2"></i>Funcionario</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th-list me-2"></i>Funcionario</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{url('/crearFuncionario')}}" class="dropdown-item">Nuevo Funcionario</a>
                             <a href="{{url('/actualizarFuncionarioProducto')}}" class="dropdown-item">Actualizar Datos</a>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th me-2"></i>Producto</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th me-2"></i>Producto</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{url('/registroProducto')}}" class="dropdown-item">Nuevo Producto</a>
                             <a href="{{url('/actualizarProducto')}}" class="dropdown-item">Actulizar Produc.</a>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th me-2"></i>Reportes</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-th me-2"></i>Reportes</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a id="item-reporte-casjas" class="dropdown-item" data-toggle="modal" data-target="#staticBackdrop">Reporte Cajas</a>
                         </div>
@@ -201,7 +201,7 @@
                 <div class="row g-4">
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                            <i class="fa fa-line-chart fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2" >Total Venta hoy</p>
                                 <h6 class="mb-0" id="totalVentaHoy">Bs. 0</h6>
@@ -210,7 +210,7 @@
                     </div>
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
+                            <i class="fa fa-calendar-check-o fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Ventas del Mes</p>
                                 <h6 class="mb-0" id="totalVentaMes">Bs. 0</h6>
