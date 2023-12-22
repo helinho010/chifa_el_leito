@@ -133,12 +133,15 @@ class ventaProductosController extends Controller
         $impresora->feed(2);
         $impresora->text("Mesa:..................."."\n");
         $impresora->feed(2);
-        $impresora->text("Nombre:..................."."\n");
+        $impresora->text("Nombre:   ");
+        $impresora->setTextSize(3,3);
+        $impresora->text($request->nombre_cliente."\n");
+        $impresora->setTextSize(1,1);
         $impresora->feed(2);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->setTextSize(1,1);
         //$impresora->text("Señores: ".$cliente_nu->razon_social."\n");
-        $impresora->text("Fecha: ".date("d/m/Y")."  Hora: ".date("H:i")."\n");
+        $impresora->text("Fecha: ".date("d/m/Y")."  Hora: ".date("H:i:s")."\n");
         $impresora->text("ID Venta: ".$ultimoRegistroVenta->id_venta."\n");
         $impresora->feed(1);
         $impresora->text("----------------------------------------\n");
