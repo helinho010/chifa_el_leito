@@ -111,8 +111,8 @@ class ventaProductosController extends Controller
         date_default_timezone_set('America/La_Paz');
         $datos_venta_func_cli->fecha_venta=date("Y-m-d H:i");
         $datos_venta_func_cli->save();
+        
         $ultimoRegistroVenta=Venta::orderBy('id_venta','desc')->limit(1)->first();
-
         
         foreach ($request->detalle as $key => $value) {
             $datos_detalle_venta = new DetalleVenta();
@@ -124,6 +124,8 @@ class ventaProductosController extends Controller
             $datos_detalle_venta->save();
         }
 
+        $contadorRegistros=Venta::whereRaw('EXTRACT(YEAR FROM fecha_venta) = '.date("Y"))->count();
+        
         $nombreImpresora = "LEITO";
 	    $connector = new WindowsPrintConnector($nombreImpresora);
 	    $impresora = new Printer($connector);
@@ -142,7 +144,8 @@ class ventaProductosController extends Controller
         $impresora->setTextSize(1,1);
         //$impresora->text("Señores: ".$cliente_nu->razon_social."\n");
         $impresora->text("Fecha: ".date("d/m/Y")."  Hora: ".date("H:i:s")."\n");
-        $impresora->text("ID Venta: ".$ultimoRegistroVenta->id_venta."\n");
+        // $impresora->text("ID Venta: ".$ultimoRegistroVenta->id_venta."\n");
+        $impresora->text("ID Venta: ".$contadorRegistros."\n");
         $impresora->feed(1);
         $impresora->text("----------------------------------------\n");
         $impresora->text("Cod.    Producto     Cnt.  PU.   Total\n");
